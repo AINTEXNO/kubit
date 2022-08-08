@@ -4,6 +4,9 @@ namespace App\Services;
 
 class Request
 {
+    /**
+     * @var array - данные, переданные в запрос
+     */
     protected $data;
 
     public function __construct()
@@ -11,6 +14,12 @@ class Request
         $this->data = count($_GET) ? $_GET : $_POST;
     }
 
+    /**
+     * @param $url
+     * @param $headers
+     * @return bool|string
+     * метод, для отправки данных post-запросом
+     */
     public function post($url, $headers = [])
     {
         $curl = curl_init();
@@ -27,6 +36,10 @@ class Request
         return curl_exec($curl);
     }
 
+    /**
+     * @return $this
+     * метод, конвертирующий массив в json-объект
+     */
     public function to_json()
     {
         $this->data = to_json($this->data);
@@ -34,6 +47,11 @@ class Request
         return $this;
     }
 
+    /**
+     * @param $additionalRequestData
+     * @return $this
+     * метод, который добавляет данные в запрос
+     */
     public function append($additionalRequestData)
     {
         $this->data = array_merge($this->data, $additionalRequestData);
@@ -41,6 +59,11 @@ class Request
         return $this;
     }
 
+    /**
+     * @param $keys
+     * @return $this
+     * метод, который позволяет получить из запроса определенные данные
+     */
     public function only($keys)
     {
         $filterRequestData =  array_filter($this->data, function($key) use ($keys) {
